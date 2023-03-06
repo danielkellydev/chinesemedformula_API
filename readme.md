@@ -30,3 +30,9 @@ An ORM is an Object Relational Mapper. It is a tool that allows developers to in
 (Hoyos, 2019; What Is an ORM – The Meaning of Object Relational Mapping Database Tools, 2022)
 ## API endpoints
 
+## Third party apps
+Flask
+Sqlalchemy
+Jwt
+Pyjwt
+
