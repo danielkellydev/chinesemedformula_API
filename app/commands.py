@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app import db
+from app.app import db
 
 db_cmd = Blueprint('db_cmd', __name__)
 

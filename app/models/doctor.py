@@ -1,4 +1,4 @@
-from app import db
+from app.routes import db
 from app.models.patient import Patient
 
 # create a doctor model

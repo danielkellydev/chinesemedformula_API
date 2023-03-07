@@ -1,4 +1,4 @@
-from app import db
+from app.routes import db
 
 # create a patient model
 class Patient(db.Model):

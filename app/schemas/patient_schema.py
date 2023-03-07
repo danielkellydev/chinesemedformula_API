@@ -1,4 +1,4 @@
-from app import ma
+from app.routes import ma
 from marshmallow import fields
 
 class PatientSchema(ma.Schema):

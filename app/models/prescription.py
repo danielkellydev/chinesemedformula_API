@@ -1,4 +1,4 @@
-from app import db
+from app.routes import db
 
 # create a prescription model
 class Prescription(db.Model):
