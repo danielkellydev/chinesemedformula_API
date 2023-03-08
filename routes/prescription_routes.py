@@ -17,3 +17,14 @@ def get_prescriptions():
 def get_prescription(id):
     prescription = Prescription.query.get(id)
     return jsonify(prescription_schema.dump(prescription))
+
+@prescription_routes.route('/prescriptions', methods=['POST'])
+def add_prescription():
+    new_prescription = Prescription(
+        patient_id=request.json['patient_id'],
+        formula_id=request.json['formula_id'],
+        doctor_id=request.json['doctor_id']
+    )
+    db.session.add(new_prescription)
+    db.session.commit()
+    return jsonify(prescription_schema.dump(new_prescription))

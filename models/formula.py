@@ -9,7 +9,6 @@ class Formula(db.Model):
     description = db.Column(db.String(200), nullable=False)
     ingredients = db.Column(db.String(200), nullable=False)
     instructions = db.Column(db.String(200), nullable=False)
-    # patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=False)
 
     def __repr__(self):
         return f'{self.name}'

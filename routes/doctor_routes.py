@@ -23,7 +23,8 @@ def add_doctor():
         email=request.json['email'],
         password=request.json['password'],
         phone_number=request.json['phone_number'],
-        AHPRA_number=request.json['AHPRA_number']
+        AHPRA_number=request.json['AHPRA_number'],
+        patients=request.json['patients']
     )
     db.session.add(new_doctor)
     db.session.commit()

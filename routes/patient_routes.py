@@ -23,7 +23,8 @@ def add_patient():
         email=request.json['email'],
         password=request.json['password'],
         phone_number=request.json['phone_number'],
-        doctor_id=request.json['doctor_id']
+        doctor_id=request.json['doctor_id'],
+        formula_id=request.json['formula_id']
     )
     db.session.add(new_patient)
     db.session.commit()

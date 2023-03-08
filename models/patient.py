@@ -1,4 +1,5 @@
 from app import db
+from sqlalchemy import ForeignKey
 
 
 # create a patient model
@@ -12,7 +13,7 @@ class Patient(db.Model):
     password = db.Column(db.String(120), nullable=False)
     phone_number = db.Column(db.String(120), nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
-    # formulas = db.relationship('Formula', backref='patient', lazy=True)
+    formula_id = db.Column(db.Integer, db.ForeignKey('formulas.id'))
 
     def __repr__(self):
         return f'{self.name}'
