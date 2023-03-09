@@ -12,7 +12,6 @@ class Doctor(db.Model):
     password = db.Column(db.String(120), nullable=False)
     phone_number = db.Column(db.String(120), unique= True, nullable=False)
     AHPRA_number = db.Column(db.String(120), unique= True, nullable=False)
-    patients = db.relationship('Patient', backref='doctor', lazy=True)
 
     def __repr__(self):
         return f'{self.first_name} {self.last_name}'

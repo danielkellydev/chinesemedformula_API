@@ -12,8 +12,6 @@ class Patient(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     phone_number = db.Column(db.String(120), nullable=False)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
-    formula_id = db.Column(db.Integer, db.ForeignKey('formulas.id'))
 
     def __repr__(self):
-        return f'{self.name}'
+        return f'{self.first_name} {self.last_name}'

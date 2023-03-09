@@ -22,7 +22,6 @@ def add_formula():
         description=request.json['description'],
         ingredients=request.json['ingredients'],
         instructions=request.json['instructions'],
-        # doctor_id=request.json['doctor_id']
     )
     db.session.add(new_formula)
     db.session.commit()

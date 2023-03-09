@@ -2,8 +2,10 @@ from flask import Blueprint, jsonify, request
 from database import db
 from models.doctor import Doctor
 from schemas.doctor_schema import doctor_schema, doctors_schema
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 doctor_routes = Blueprint('doctor_routes', __name__, url_prefix='/')
+
 
 @doctor_routes.route('/doctors', methods=['GET'])
 def get_doctors():
@@ -24,7 +26,6 @@ def add_doctor():
         password=request.json['password'],
         phone_number=request.json['phone_number'],
         AHPRA_number=request.json['AHPRA_number'],
-        patients=request.json['patients']
     )
     db.session.add(new_doctor)
     db.session.commit()
