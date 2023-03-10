@@ -3,21 +3,25 @@ from database import db
 from models.doctor import Doctor
 from schemas.doctor_schema import doctor_schema, doctors_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from routes.auth import jwt
 
 doctor_routes = Blueprint('doctor_routes', __name__, url_prefix='/')
 
 
 @doctor_routes.route('/doctors', methods=['GET'])
+@jwt_required()
 def get_doctors():
     doctors = Doctor.query.all()
     return jsonify(doctors_schema.dump(doctors))
 
 @doctor_routes.route('/doctors/<id>', methods=['GET'])
+@jwt_required()
 def get_doctor(id):
     doctor = Doctor.query.get(id)
     return jsonify(doctor_schema.dump(doctor))
 
 @doctor_routes.route('/doctors', methods=['POST'])
+@jwt_required()
 def add_doctor():
     new_doctor = Doctor(
         first_name=request.json['first_name'],

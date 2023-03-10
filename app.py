@@ -4,6 +4,7 @@ from commands import db_cmd
 from database import db, ma
 
 
+
 def create_app():
     global app
     app = Flask(__name__)

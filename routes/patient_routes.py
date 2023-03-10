@@ -2,20 +2,24 @@ from flask import Blueprint, jsonify, request
 from database import db
 from models.patient import Patient
 from schemas.patient_schema import patient_schema, patients_schema
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 patient_routes = Blueprint('patient_routes', __name__, url_prefix='/')
 
 @patient_routes.route('/patients', methods=['GET'])
+@jwt_required()
 def get_patients():
     patients = Patient.query.all()
     return jsonify(patients_schema.dump(patients))
 
 @patient_routes.route('/patients/<id>', methods=['GET'])
+@jwt_required()
 def get_patient(id):
     patient = Patient.query.get(id)
     return jsonify(patient_schema.dump(patient))
 
 @patient_routes.route('/patients', methods=['POST'])
+@jwt_required()
 def add_patient():
     new_patient = Patient(
         first_name=request.json['first_name'],
