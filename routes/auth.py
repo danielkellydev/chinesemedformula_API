@@ -47,33 +47,14 @@ def doctor_required(fn):
     return wrapper
 
 # based on the email of the user, detect if the user is a patient or doctor
-def patient_only(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        # get the user identity from the access token
-        user_email = get_jwt_identity()
-        # get the user object from the database
-        user = User.query.filter_by(email=user_email).first()
-        # check if the user is an admin
-        if user.patient_id:
-            return fn(*args, **kwargs)
-        return jsonify(message='Patients only!'), 403
-    return wrapper
-
-# based on email of user, define a function where data can only be accessed by the related doctor or patient
-def doctor_or_patient(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        # get the user identity from the access token
-        user_email = get_jwt_identity()
-        # get the user object from the database
-        user = User.query.filter_by(email=user_email).first()
-        # check if the user is an admin
-        if user.patient_id or user.doctor_id:
-            return fn(*args, **kwargs)
-        return jsonify(message='Doctors or Patients only!'), 403
-    return wrapper
-
+def patient_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        current_user_email = get_jwt_identity()
+        if 'email' in kwargs and kwargs['email'] != current_user_email:
+            return jsonify(message='Unauthorized access'), 401
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @auth_routes.route('/signup', methods=['POST'])

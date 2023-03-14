@@ -7,8 +7,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False, primary_key=True)
     password_hash = db.Column(db.String(128), nullable=False)
     admin = db.Column(db.Boolean, default=False, nullable=False)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'), nullable=True, unique=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=True, unique=True)
 
     def __init__(self, email, password, admin=False, patient_id=None, doctor_id=None):
         self.email = email
