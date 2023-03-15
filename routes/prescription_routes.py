@@ -5,12 +5,12 @@ from models.patient import Patient
 from schemas.prescription_schema import prescription_schema, prescriptions_schema
 from flask_jwt_extended import jwt_required, current_user
 from routes.auth import jwt
-from routes.auth import doctor_required, patient_only, admin_required
+from routes.auth import doctor_required, patient_only, admin_required, doctor_or_admin_only, requires_prescription_access
 
 
 prescription_routes = Blueprint('prescription_routes', __name__, url_prefix='/')
 
-
+# Get all prescriptions
 @prescription_routes.route('/prescriptions', methods=['GET'])
 @jwt_required()
 @admin_required
@@ -18,13 +18,15 @@ def get_prescriptions():
     prescriptions = Prescription.query.all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-
+# Get prescription by id
 @prescription_routes.route('/prescriptions/<id>', methods=['GET'])
 @jwt_required()
+@requires_prescription_access
 def get_prescription(id):
     prescription = Prescription.query.get(id)
     return jsonify(prescription_schema.dump(prescription))
 
+# Add prescription
 @prescription_routes.route('/prescriptions', methods=['POST'])
 @jwt_required()
 @doctor_required
@@ -39,31 +41,31 @@ def add_prescription():
     return jsonify(prescription_schema.dump(new_prescription))
 
 
-# query prescriptions by patient id
+# Get prescriptions by patient id
 @prescription_routes.route('/prescriptions/patient/<patient_id>', methods=['GET'])
 @jwt_required()
-@doctor_required
+@requires_prescription_access
 def get_patient_prescriptions(patient_id):
     prescriptions = Prescription.query.filter_by(patient_id=patient_id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-# query prescriptions by doctor id
+# Get prescriptions by doctor id
 @prescription_routes.route('/prescriptions/doctor/<doctor_id>', methods=['GET'])
 @jwt_required()
-@doctor_required
+@requires_prescription_access
 def get_doctor_prescriptions(doctor_id):
     prescriptions = Prescription.query.filter_by(doctor_id=doctor_id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-# query prescriptions by patient id and doctor id
+# Get prescriptions by patient id and doctor id
 @prescription_routes.route('/prescriptions/patient/<patient_id>/doctor/<doctor_id>', methods=['GET'])
 @jwt_required()
-@doctor_required
+@requires_prescription_access
 def get_patient_doctor_prescriptions(patient_id, doctor_id):
     prescriptions = Prescription.query.filter_by(patient_id=patient_id, doctor_id=doctor_id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-#  query by email. For email entered, reference patient table to get patient id, then query prescriptions by patient id
+#Get prescriptions by email. For email entered, reference patient table to get patient id, then query prescriptions by patient id.
 @prescription_routes.route('/prescriptions/patient/email/<email>', methods=['GET'])
 @jwt_required()
 @patient_only
@@ -73,6 +75,18 @@ def get_patient_prescriptions_by_email(email):
         return jsonify(message='Patient not found'), 404
     prescriptions = Prescription.query.filter_by(patient_id=patient.id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
+
+# Update prescriptions by id
+@prescription_routes.route('/prescriptions/update/<id>', methods=['PUT'])
+@jwt_required()
+@requires_prescription_access
+def update_prescription(id):
+    prescription = Prescription.query.get(id)
+    prescription.patient_id = request.json['patient_id']
+    prescription.formula_id = request.json['formula_id']
+    prescription.doctor_id = request.json['doctor_id']
+    db.session.commit()
+    return jsonify(prescription_schema.dump(prescription))
 
 # Delete prescriptions by id
 @prescription_routes.route('/prescriptions/delete/<id>', methods=['DELETE'])
