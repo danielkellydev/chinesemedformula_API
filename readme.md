@@ -241,26 +241,34 @@ This endpoint allows a specific prescription to be deleted by prescription_id, m
 
 
 
+## Third party services used
 
 
+- ***Flask-SQLAlchemy 2.5.1*** <br>
+A flask extension that provides integration between Flask and SQLAlchemy. With this extension one can easily define database models as Python classes, and interact with them using SQLAlchemy’s ORM. It allows one to create and manage database tables and relationships, and to define and run queries. (Flask-SQLAlchemy — Flask-SQLAlchemy Documentation (3.0.x), n.d.)<br>
+
+- ***Flask-JWT-Extended 4.3.0*** <br>
+A flask extension that provides JWT support for Flask. It allows one to easily add JWT authentication to their application with the use of decorators. (Flask-JWT-Extended — Flask-JWT-Extended Documentation (4.3.x), n.d.)<br>
 
 
+- ***Marshmallow 3.13.0*** <br>
+A Python library that provides a simple interface for serializing and deserializing complex data structures. It allows one to define schemas as Python classes, and interact with them using Marshmallow’s ORM. It allows one to create and manage schemas and relationships, and to define and run queries. (Marshmallow — Marshmallow Documentation (3.13.x), n.d.)<br>
 
+- ***psycopg2 2.9.3*** <br>
+A database driver that sends SQL statements to a SQL database. 
 
+- ***pyjwt 2.6.0*** <br>
+A Python library that provides a JSON Web Token implementation. It allows one to create and decode JSON Web Tokens. (PyJWT — PyJWT Documentation, n.d.)<br>
 
+- ***SQLalchemy 1.4.39*** <br>
+SQLalchemy is an ORM that generates SQL statements. (SQLAlchemy — SQLAlchemy Documentation (1.4.x), n.d.)<br>
 
+- ***cryptography 2.8*** <br>
+A Python library that provides cryptographic recipes and primitives to Python developers. It allows one to encrypt and decrypt data. (cryptography — cryptography Documentation (2.8.x), n.d.)<br>
 
+- ***Insomnia 2022.7.5*** <br>
+A REST client that allows one to test API endpoints. (Insomnia — Insomnia Documentation, n.d.)<br>
 
+## Describe project models and database relationships
 
-
-
-
-
-
-
-## Third party apps
-Flask
-Sqlalchemy
-Jwt
-Pyjwt
 
