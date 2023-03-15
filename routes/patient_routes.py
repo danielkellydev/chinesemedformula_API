@@ -35,7 +35,6 @@ def add_patient():
             first_name=request.json['first_name'],
             last_name=request.json['last_name'],
             email=request.json['email'],
-            password=request.json['password'],
             phone_number=request.json['phone_number'],
         )
         db.session.add(new_patient)
@@ -59,7 +58,6 @@ def update_patient(id):
     patient.first_name = request.json['first_name']
     patient.last_name = request.json['last_name']
     patient.email = request.json['email']
-    patient.password = request.json['password']
     patient.phone_number = request.json['phone_number']
     db.session.commit()
     return jsonify(patient_schema.dump(patient))

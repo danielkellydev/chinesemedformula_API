@@ -82,7 +82,6 @@ This endpoint allows new doctors to be created, must be logged in as admin. A do
 	"first_name": "Darren",
 	"last_name": "Marksel",
 	"email": "darrenmarksel@doctor.com",
-	"password": "password",
 	"phone_number": "0486680354",
 	"AHPRA_number": "LIEN9456484"
 }
@@ -102,7 +101,6 @@ This endpoint allows a specific doctor to be updated by doctor_id, must be logge
     "first_name": "Darren",
     "last_name": "Marksel",
     "email": "darrenmarksel@doctor.com",
-    "password": "password",
     "phone_number": "0486681111",
     "AHPRA_number": "LIEN9456484"
 }
@@ -121,7 +119,6 @@ This endpoint allows new patients to be created, must be logged in as a doctor o
     "first_name": "John",
     "last_name": "Smith",
     "email": "johnsmith@patient.com",
-    "password": "password",
     "phone_number": "0486680354"
 }
 ```
@@ -140,7 +137,6 @@ This endpoint allows a specific patient to be updated by patient_id, must be log
     "first_name": "Jonathon",
     "last_name": "Smith",
     "email": "johnsmith@patient.com",
-    "password": "password",
     "phone_number": "0486681111"
 }
 ```

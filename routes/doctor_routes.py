@@ -30,7 +30,6 @@ def add_doctor():
         first_name=request.json['first_name'],
         last_name=request.json['last_name'],
         email=request.json['email'],
-        password=request.json['password'],
         phone_number=request.json['phone_number'],
         AHPRA_number=request.json['AHPRA_number'],
     )
@@ -55,7 +54,6 @@ def update_doctor(id):
     doctor.first_name = request.json['first_name']
     doctor.last_name = request.json['last_name']
     doctor.email = request.json['email']
-    doctor.password = request.json['password']
     doctor.phone_number = request.json['phone_number']
     doctor.AHPRA_number = request.json['AHPRA_number']
     db.session.commit()
