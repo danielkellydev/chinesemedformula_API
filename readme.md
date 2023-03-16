@@ -23,12 +23,39 @@ In comparison to other databases, some known drawbacks of PostgreSQL include:
 
 (What Is PostgreSQL? Introduction, Advantages & Disadvantages, n.d.)
 
-## What are the key functionalities and benefits of an ORM? 
+## What are the key benefits of an ORM? 
 
-An ORM is an Object Relational Mapper. It is a tool that allows developers to interact with a database using an object-oriented paradigm. It is a great tool for developers because it allows them to interact with a database using an object-oriented paradigm, which is a more intuitive way of interacting with a database. It also allows developers to interact with a database without having to write SQL queries. Additionally, it allows developers to interact with a database without having to worry about the underlying database structure.
+Using an ORM (Object-Relational Mapping) in software development can provide various benefits:
 
-(Hoyos, 2019; What Is an ORM – The Meaning of Object Relational Mapping Database Tools, 2022)
+- Decreased development time and complexity: ORMs simplify the process of communicating with databases, reducing the amount of code needed. This allows developers to build complex applications faster with less code, giving them more time to focus on other areas of the application.
+
+- Improved maintainability: ORMs standardize the way applications interact with databases, making it easier to update and modify code without requiring extensive modifications to SQL queries or other database-related code.
+
+- Increased portability: ORMs abstract away the differences between various database systems, improving the ability of applications to be developed on one system and then deployed on another without extensive code changes.
+
+- Enhanced security: ORMs can help prevent SQL injection attacks by handling formatting and validation of SQL queries automatically, making it more difficult for attackers to exploit vulnerabilities in the application.
+
+- Improved performance: ORMs can use caching and other optimization techniques to reduce the number of database queries needed, leading to significant performance improvements for applications that work with large amounts of data.
+
+- Simplified testing: ORMs provide a simplified interface for working with databases, making it easier to write unit tests for database-related code. This makes it easier to identify and fix bugs, ultimately improving the overall quality of the application.
+
 <br>
+
+## What are the key functionalities of an ORM? 
+
+The main functionalities of an ORM are:
+
+- Object-Relational Mapping: Developers can map database tables to objects in their code, which provides an intuitive and familiar way of working with data. This simplifies coding, reduces errors, and enhances readability.
+
+- Automatic SQL query generation: ORMs generate SQL queries automatically based on developer requests, so developers don't have to write complex SQL queries themselves. This saves time and reduces the likelihood of errors.
+
+- Caching: ORMs can store frequently accessed data in memory, which boosts application performance by allowing quick and efficient data retrieval without repetitive database queries.
+
+- Data validation and conversion: ORMs automatically validate data against predefined rules and constraints to ensure consistency and accuracy. Additionally, ORMs can convert data between different types, making it easier to work with data in various formats.
+
+- Relationship management: ORMs can manage relationships between objects, simplifying the process of working with complex data structures and reducing the likelihood of errors. Developers can create and manage relationships between different objects in their code with ease.
+
+(Hoyos, 2019; SQLAlchemy ORM — SQLAlchemy 1.4 Documentation, n.d.; What Is an ORM – The Meaning of Object Relational Mapping Database Tools, 2022)
 
 ## API endpoints
 <br>
@@ -198,7 +225,8 @@ This endpoint allows new prescriptions to be created, must be logged in as a doc
     {
     "formula_id": 1,
     "patient_id": 1,
-    "doctor_id": 1
+    "doctor_id": 1,
+    "instructions": "Take 1 tsp of powder in hot water, twice a day",
 }
 ```
 
@@ -224,7 +252,8 @@ This endpoint allows a specific prescription to be updated by prescription_id, m
     {
     "formula_id": 2,
     "patient_id": 1,
-    "doctor_id": 1
+    "doctor_id": 1,
+    "instructions": "Take 3 pills, twice a day"
 }
 ```
 
@@ -233,9 +262,109 @@ This endpoint allows a specific prescription to be deleted by prescription_id, m
 
 
 
+<br>
 
+## Recommended Setup
+1. It is assumed that you have PostgreSQl installed on your machine. If you do not, you can download it here: https://www.postgresql.org/download/
+2. Run script.sh. This will create and initialise a virtual environment, install all dependencies, and create the tables in the database.
+3. Run the API with the command: `flask run`
+4. You can now use the API endpoints below to interact with the database.
+5. Create an admin user account using the /signup POST endpoint. The admin field should be set to true, and the patient_id and doctor_id fields should be set to null.
+```json
+{
+	"email": "admin@gmail.com",
+	"password": "password", 
+	"admin": true,
+	"patient_id": null,
+	"doctor_id": null
+    }
+```
+6. Create 3 doctor accounts using the /doctors POST endpoint.
+```json
+    {
+	"first_name": "Darren",
+	"last_name": "Marksel",
+	"email": "darrenmarksel@doctor.com",
+	"phone_number": "0486680354",
+	"AHPRA_number": "LIEN9456484"
+}
+```
 
+7. Create 3 patient accounts using the /patients POST endpoint.
+```json
+    {
+    "first_name": "John",
+    "last_name": "Smith",
+    "email": "johnsmith@patient.com",
+    "phone_number": "0486680354"
+}
+```
+8. Create a user account for each doctor and patient using the /signup endpoint. The admin field should be set to false, and the patient_id and doctor_id fields should be set to the id of the patient or doctor that the user is associated with. The email and id field should be the same as the email and id fields in the doctor or patient entity.
+```json
+{
+	"email": "johnsmith@patient.com",
+	"password": "password", 
+	"admin": false,
+	"patient_id": 1,
+	"doctor_id": null
+    }
 
+{
+    "email": "darrenmarksel@doctor.com",
+    "password": "password",
+    "admin": false,
+    "patient_id": null,
+    "doctor_id": 1
+}
+```
+9. Populate the formulas table using the /formulas endpoint. Refer to the formulas endpoint information below for the correct format.
+
+```json
+    {
+    "name": "Li Zhong Wan",
+    "description": "Li zhong wan is a traditional Chinese herbal formula commonly used to treat digestive issues, including indigestion, bloating, and diarrhea.",
+    "ingredients": "Bai zhu 9, Gan jiang 9, Ren shen 9, Zhi gan cao 9",
+    "instructions": "Take 6 pills, twice a day"
+}
+
+{
+    "name": "Sheng Mai San",
+    "description": "Sheng mai san is a traditional Chinese herbal formula commonly used to treat fatigue, insomnia, and anxiety.",
+    "ingredients": "Ren shen 9, Mai men dong 15, Wu wei zi 6",
+    "instructions": "Take 1 tsp in hot water, twice daily"
+}
+
+{
+    {
+    "name": "Si Ni San",
+    "description": "Si Ni San is a traditional Chinese herbal formula used to treat a variety of conditions, including anxiety, depression, insomnia, and menopausal symptoms.",
+    "ingredients": "Bai shao 9, chai hu 9, zhi shi 9, zhi gan cao 9",
+    "instructions": "Take 1 tsp of powder in hot water, twice a day"
+}
+}
+```
+
+So by now, you should have the following in your database: <br>
+- 1 admin user account
+- 3 doctor account(s)
+- 3 patient account(s)
+- user accounts for all doctor(s)
+- user accounts for all patient(s)
+- 3 formula(s)
+
+Now that these are populated, you can create new prescriptions using the /prescriptions endpoint.
+```json
+    {
+    "formula_id": 1,
+    "patient_id": 1,
+    "doctor_id": 1,
+    "instructions": "Take 1 tsp of powder in hot water, twice a day"
+}
+```
+
+Please continue to read through the remaining endpoints and test them for yourself. 
+
+<br>
 
 ## Third party services used
 
@@ -268,3 +397,19 @@ A REST client that allows one to test API endpoints. (Insomnia — Insomnia Docu
 ## Describe project models and database relationships
 
 
+
+
+
+## Project Planning Process
+
+For this project, I used somewhat of an Agile methodology, with very simple iterations. I started by creating a Trello board, and adding the following columns: <br>
+- To Do
+- Doing
+- Done
+
+All of the tasks that I needed to complete were added to the To Do column. I then started working on the tasks, and moved them to the Doing column. Once I had completed a task, I moved it to the Done column. As new tasks were added, I would move them to the To Do column. I repeated this process until all of the tasks were completed. 
+
+<br>
+
+
+<img src="docs/screenshot_trello.jpg" alt="Trello board screenshot" width="500"/>

@@ -7,7 +7,7 @@ from routes.auth import admin_required
 
 doctor_routes = Blueprint('doctor_routes', __name__, url_prefix='/')
 
-
+# Get all doctors, must be admin
 @doctor_routes.route('/doctors', methods=['GET'])
 @jwt_required()
 @admin_required
@@ -15,6 +15,7 @@ def get_doctors():
     doctors = Doctor.query.all()
     return jsonify(doctors_schema.dump(doctors))
 
+# Get a doctor by id, must be admin
 @doctor_routes.route('/doctors/<id>', methods=['GET'])
 @jwt_required()
 @admin_required
@@ -22,6 +23,7 @@ def get_doctor(id):
     doctor = Doctor.query.get(id)
     return jsonify(doctor_schema.dump(doctor))
 
+# Add a doctor, must be admin
 @doctor_routes.route('/doctors', methods=['POST'])
 @jwt_required()
 @admin_required
@@ -37,6 +39,7 @@ def add_doctor():
     db.session.commit()
     return jsonify(doctor_schema.dump(new_doctor))
 
+# Delete a doctor, must be admin
 @doctor_routes.route('/doctors/delete/<id>', methods=['DELETE'])
 @jwt_required()
 @admin_required
@@ -46,6 +49,7 @@ def delete_doctor(id):
     db.session.commit()
     return jsonify(doctor_schema.dump(doctor))
 
+# Update a doctor, must be admin
 @doctor_routes.route('/doctors/update/<id>', methods=['PUT'])
 @jwt_required()
 @admin_required

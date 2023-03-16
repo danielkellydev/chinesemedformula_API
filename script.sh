@@ -5,4 +5,7 @@ source venv/bin/activate
 # install requirements
 pip install -r requirements.txt
 # create database tables
-python -c "from database import db; db.create_all()"
+flask shell
+>>> from database import db
+>>> db.create_all()
+>>> exit()
