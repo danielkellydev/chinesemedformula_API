@@ -63,8 +63,6 @@ def admin_or_doctor_required(fn):
         # otherwise continue with the original route function
         return fn(*args, **kwargs)
     return wrapper
-# This wrapper is not working, patients can access the route. I need to re-write it.
-
 
 
 # based on the email of the user, detect if the user is a patient or doctor
@@ -77,19 +75,9 @@ def patient_only(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def doctor_or_admin_only():
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            current_user_email = get_jwt_identity()
-            if 'email' in kwargs and kwargs['email'] != current_user_email:
-                return jsonify(message='Unauthorized access'), 401
-            return f(*args, **kwargs)
-        return decorated_function
-    return decorator
 
 # decorator to use so that only an admin or the doctor who created the prescription can access it.
-def requires_prescription_access(route_function):
+def requires_prescription_access_id(route_function):
     @wraps(route_function)
     def wrapper(*args, **kwargs):
         prescription_id = kwargs.get('id')
@@ -109,6 +97,7 @@ def requires_prescription_access(route_function):
         return jsonify({'message': 'Unauthorized access.'}), 401
 
     return wrapper
+
 
 # ROUTES
 

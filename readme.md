@@ -39,6 +39,8 @@ Using an ORM (Object-Relational Mapping) in software development can provide var
 
 - Simplified testing: ORMs provide a simplified interface for working with databases, making it easier to write unit tests for database-related code. This makes it easier to identify and fix bugs, ultimately improving the overall quality of the application.
 
+(Hoyos, 2019; SQLAlchemy ORM — SQLAlchemy 1.4 Documentation, n.d.; What Is an ORM – The Meaning of Object Relational Mapping Database Tools, 2022)
+
 <br>
 
 ## What are the key functionalities of an ORM? 
@@ -57,12 +59,14 @@ The main functionalities of an ORM are:
 
 (Hoyos, 2019; SQLAlchemy ORM — SQLAlchemy 1.4 Documentation, n.d.; What Is an ORM – The Meaning of Object Relational Mapping Database Tools, 2022)
 
+<br>
+
 ## API endpoints
 <br>
 
 ### **Authentication**
 
-**/signup** <br>
+**/signup** POST <br>
 This creates a new user for navigating the API. An admin account must be created first, for which the admin field should be set to true, and the patient_id and doctor_id fields should be set to null. <br>
 
 
@@ -89,7 +93,7 @@ Whenever a new user is created, the user will be assigned a JWT token.
     }
 ```
 
-**/login** <br>
+**/login** POST <br>
 Existing users can login to the API using this endpoint, after which the user will be assigned a new JWT token.<br>
 
 ```json
@@ -98,6 +102,12 @@ Existing users can login to the API using this endpoint, after which the user wi
     "password": "password"
 }
 ```
+**/users** GET <br>
+This endpoint allows all users to be retrieved, must be logged in as admin. <br>
+
+**/users/<id>** DELETE <br>
+This endpoint allows a specific user to be deleted by id, must be logged in as admin. <br>
+
 
 ### **Doctors**
 
@@ -237,16 +247,16 @@ This endpoint allows all prescriptions to be retrieved, must be logged in as adm
 This endpoint allows a specific prescription to be retrieved by prescription_id, must be logged in as admin, or the original prescribing doctor. <br>
 
 **/prescriptions/{patient_id}** GET <br>
-This endpoint allows all prescriptions for a specific patient to be retrieved by patient_id, must be logged in as admin, or the original prescribing doctor. <br>
+This endpoint allows all prescriptions for a specific patient to be retrieved by patient_id, must be logged in as admin, or doctor. <br>
 
 **/prescriptions/{doctor_id}** GET <br>
-This endpoint allows all prescriptions for a specific doctor to be retrieved by doctor_id, must be logged in as admin, or the original prescribing doctor. <br>
+This endpoint allows all prescriptions for a specific doctor to be retrieved by doctor_id, must be logged in as admin, or doctor. <br>
 
 **/prescriptions/patient/email/{email}** GET <br>
 This endpoint allows all prescriptions for a specific patient to be retrieved by patient email, must be logged in as the patient with the relevant email. This is the main endpoint for patients to view their prescriptions. <br>
 
 **/prescriptions/{prescription_id}** PUT <br>
-This endpoint allows a specific prescription to be updated by prescription_id, must be logged in as admin, or the original prescribing doctor. <br>
+This endpoint allows a specific prescription to be updated by prescription_id, must be logged in as admin. <br>
 
 ```json
     {
@@ -317,7 +327,7 @@ This endpoint allows a specific prescription to be deleted by prescription_id, m
     "doctor_id": 1
 }
 ```
-9. Populate the formulas table using the /formulas endpoint. Refer to the formulas endpoint information below for the correct format.
+9. Populate the formulas table using the /formulas endpoint. You can use the following examples, or create your own.
 
 ```json
     {
@@ -335,12 +345,12 @@ This endpoint allows a specific prescription to be deleted by prescription_id, m
 }
 
 {
-    {
+    
     "name": "Si Ni San",
     "description": "Si Ni San is a traditional Chinese herbal formula used to treat a variety of conditions, including anxiety, depression, insomnia, and menopausal symptoms.",
     "ingredients": "Bai shao 9, chai hu 9, zhi shi 9, zhi gan cao 9",
     "instructions": "Take 1 tsp of powder in hot water, twice a day"
-}
+
 }
 ```
 
@@ -363,6 +373,13 @@ Now that these are populated, you can create new prescriptions using the /prescr
 ```
 
 Please continue to read through the remaining endpoints and test them for yourself. 
+
+<br>
+
+
+## ERD 
+
+![ERD](docs/screenshot_erd.jpg)
 
 <br>
 
@@ -396,7 +413,79 @@ A REST client that allows one to test API endpoints. (Insomnia — Insomnia Docu
 
 ## Describe project models and database relationships
 
+The following is a list of the models that I created for this project, and the relationships between them. <br>
 
+- ***User*** <br>
+The User model is used to store user account information. It has the following fields: <br>
+- id
+- email (primary key)
+- password
+- admin
+- patient_id
+- doctor_id
+
+The User model has a one-to-one relationship with the Patient and Doctor models. This is because a user account can only be associated with one patient or doctor. <br>
+
+- ***Patient*** <br>
+The Patient model is used to store patient information. It has the following fields: <br>
+- id (primary key)
+- first_name
+- last_name
+- email
+- phone_number
+
+The Patient model has a one-to-many relationship with the Prescription model. This is because a patient can have many prescriptions. <br>
+
+It has a many-to-many relationship with the Doctor model. This is because a patient can have many doctors, and a doctor can have many patients. <br>
+
+- ***Doctor*** <br>
+
+The Doctor model is used to store doctor information. It has the following fields: <br>
+- id (primary key)
+- first_name
+- last_name
+- email
+- phone_number 
+- AHPRA_number
+
+The Doctor model has a one-to-many relationship with the Prescription model. This is because a doctor can have many prescriptions. <br>
+
+It has a many-to-many relationship with the Patient model. This is because a doctor can have many patients, and a patient can have many doctors. <br>
+
+- ***Formula*** <br>
+
+The Formula model is used to store formula information. It has the following fields: <br>
+- id (primary key)
+- name
+- description
+- ingredients
+- instructions
+
+The Formula model has a one-to-many relationship with the Prescription model. This is because a formula can have many prescriptions. <br>
+
+- ***Prescription*** <br>
+
+The Prescription model is used to store prescription information. It has the following fields: <br>
+- id (primary key)
+- formula_id (foreign key)
+- patient_id (foreign key)
+- doctor_id (foreign key)
+- instructions
+
+The prescription table links the formula, patient, and doctor tables together. This kind of table is known as a junction table. (SQLAlchemy — SQLAlchemy Documentation (1.4.x), n.d.)<br> 
+
+
+## Describe database relations with reference to the ERD
+
+The following is a list of the database relationships that I created for this project, and the relationships between them. <br>
+
+- ***User*** <br>
+The User model has a one-to-one relationship with the Patient and Doctor models. This is because a user account can only be associated with one patient or doctor. <br>
+
+- ***Patient*** <br>
+The Patient model has a one-to-many relationship with the Prescription model. This is because a patient can have many prescriptions. <br>
+
+It has a many-to-many relationship with the Doctor model. This is because a patient can have many doctors, and a doctor can have many patients. <br>
 
 
 

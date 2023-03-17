@@ -7,7 +7,7 @@ from models.formula import Formula
 from schemas.prescription_schema import prescription_schema, prescriptions_schema
 from flask_jwt_extended import jwt_required, current_user
 from routes.auth import jwt
-from routes.auth import doctor_required, patient_only, admin_required, doctor_or_admin_only, requires_prescription_access
+from routes.auth import doctor_required, patient_only, admin_required, requires_prescription_access_id, admin_or_doctor_required
 
 
 prescription_routes = Blueprint('prescription_routes', __name__, url_prefix='/')
@@ -23,7 +23,7 @@ def get_prescriptions():
 # Get prescription by id, must be admin or prescribing doctor
 @prescription_routes.route('/prescriptions/<id>', methods=['GET'])
 @jwt_required()
-@requires_prescription_access
+@requires_prescription_access_id
 def get_prescription(id):
     prescription = Prescription.query.get(id)
     return jsonify(prescription_schema.dump(prescription))
@@ -63,31 +63,31 @@ def add_prescription():
     return jsonify(prescription_schema.dump(new_prescription))
 
 
-# Get prescriptions by patient id, must be admin or prescribing doctor
+# Get prescriptions by patient id, must be admin or doctor
 @prescription_routes.route('/prescriptions/patient/<patient_id>', methods=['GET'])
 @jwt_required()
-@requires_prescription_access
+@admin_or_doctor_required
 def get_patient_prescriptions(patient_id):
     prescriptions = Prescription.query.filter_by(patient_id=patient_id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-# Get prescriptions by doctor id, must be admin or prescribing doctor
+# Get prescriptions by doctor_id, must be admin or doctor
 @prescription_routes.route('/prescriptions/doctor/<doctor_id>', methods=['GET'])
 @jwt_required()
-@requires_prescription_access
+@admin_or_doctor_required
 def get_doctor_prescriptions(doctor_id):
     prescriptions = Prescription.query.filter_by(doctor_id=doctor_id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-# Get prescriptions by patient id and doctor id, must be admin or prescribing doctor
+# Get prescriptions by patient id and doctor id, must be admin or doctor
 @prescription_routes.route('/prescriptions/patient/<patient_id>/doctor/<doctor_id>', methods=['GET'])
 @jwt_required()
-@requires_prescription_access
+@admin_or_doctor_required
 def get_patient_doctor_prescriptions(patient_id, doctor_id):
     prescriptions = Prescription.query.filter_by(patient_id=patient_id, doctor_id=doctor_id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-# Get prescriptions by email. For email entered, reference patient table to get patient id, then query prescriptions by patient id.
+# Get prescriptions by patient email, must be logged in as relevant patient. 
 # Main endpoint for patient to view their prescriptions
 @prescription_routes.route('/prescriptions/patient/email/<email>', methods=['GET'])
 @jwt_required()
@@ -99,10 +99,10 @@ def get_patient_prescriptions_by_email(email):
     prescriptions = Prescription.query.filter_by(patient_id=patient.id).all()
     return jsonify(prescriptions_schema.dump(prescriptions))
 
-# Update prescriptions by id, must be admin or prescribing doctor
+# Update prescriptions by id, must be admin or doctor
 @prescription_routes.route('/prescriptions/update/<id>', methods=['PUT'])
 @jwt_required()
-@requires_prescription_access
+@admin_required
 def update_prescription(id):
     prescription = Prescription.query.get(id)
     prescription.patient_id = request.json['patient_id']
