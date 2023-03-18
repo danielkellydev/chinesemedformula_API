@@ -6,7 +6,6 @@ from models.doctor import Doctor
 from models.formula import Formula
 from schemas.prescription_schema import prescription_schema, prescriptions_schema
 from flask_jwt_extended import jwt_required
-from routes.auth import jwt
 from routes.auth import doctor_required, patient_only, admin_required, requires_prescription_access_id, admin_or_doctor_required
 
 

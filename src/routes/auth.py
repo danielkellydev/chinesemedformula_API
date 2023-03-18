@@ -20,6 +20,8 @@ jwt.init_app(app)
 app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this!
 
 # WRAPS
+
+# Decorator to check if the user is an admin
 def admin_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
@@ -34,7 +36,7 @@ def admin_required(fn):
         return fn(*args, **kwargs)
     return wrapper
 
-
+# decorator to check if the user is a doctor
 def doctor_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
@@ -49,7 +51,7 @@ def doctor_required(fn):
         return fn(*args, **kwargs)
     return wrapper
 
-
+# decorator to check if the user is an admin or doctor
 def admin_or_doctor_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
@@ -65,7 +67,7 @@ def admin_or_doctor_required(fn):
     return wrapper
 
 
-# based on the email of the user, detect if the user is a patient or doctor
+# based on the email of the user, detect if the user is the relevant patient
 def patient_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -101,6 +103,7 @@ def requires_prescription_access_id(route_function):
 
 # ROUTES
 
+# Route to create new user
 @auth_routes.route('/signup', methods=['POST'])
 def signup():
     email = request.json['email']
@@ -146,7 +149,7 @@ def signup():
     
 
 
-
+# Route to login
 @auth_routes.route('/login', methods=['POST'])
 def login():
     email = request.json['email']
